@@ -5,7 +5,7 @@
 # binary dependencies between projects.
 
 { lib, stdenv, defaultCrateOverrides, fetchCrate, pkgsBuildBuild, rustc, rust
-, cargo, jq }:
+, cargo, jq, libiconv }:
 
 let
     # Create rustc arguments to link against the given list of dependencies
@@ -305,7 +305,7 @@ stdenv.mkDerivation (rec {
   extraRustcOpts = [];
   features = [];
   nativeBuildInputs = [];
-  buildInputs = [];
+  buildInputs = [] ++ lib.optionals stdenv.hostPlatform.isDarwin [ libiconv ];
   crateOverrides = defaultCrateOverrides;
   preUnpack = crate_.preUnpack or "";
   postUnpack = crate_.postUnpack or "";
